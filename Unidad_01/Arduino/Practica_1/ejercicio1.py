@@ -1,12 +1,12 @@
 from funciones_auxiliares import funcion_objetivo
 
-import serial
+import serial 
 import csv
 import sys
 
 # Configurar la conexión serial
 try:
-    ser = serial.Serial('COM5', 115200, timeout=1)  # Added timeout
+    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)  # Added timeout
 except serial.SerialException as e:
     print(f"Error al conectar al puerto serial: {e}")
     sys.exit(1)
@@ -35,7 +35,6 @@ if __name__ == "__main__":
                     # Agregar el vector y su resultado a la lista
                     lista_resultados.append((vector, resultado))
                     
-                    # Imprimir los resultados en la consola
                     print(f"Vector: {vector}, Función objetivo: {resultado}")
 
             except (ValueError, UnicodeDecodeError) as e:
