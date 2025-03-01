@@ -1,0 +1,235 @@
+Lunes 24 de febrero --------------------------------------------------------------------------------------------
+
+4 sensores
+cada sensor definir valor min y max
+tipo: 10 y 40, pero lo que minimo que me gustaria seria 22
+
+minimizacion: (satisfaccion es el minimo)
+    sensor humedad ej: 20 - 28
+    sensor temperatura ej: 40 - 80
+    sensor ruido ej: 60 - 120
+
+maximizacion: (satisfaccion es el maximo)
+    sensor iluminacion ej: 400 - 900
+
+deterinar si es minimizacion o maximizacion, el calculo sera por diferenciacion
+
+(usar los 30 valores con la mediana en el sensor por cada loop)
+
+considerar costo por unidad de cambio:
+    cuanto mas menos en uniad de peso a mi me guatira abajar de 27 a 26, de 28 a 27, cuanto cuesta un cambio
+
+matriz de costos: (se tuvo que hacer un calculo del costo pero no lo haremos)
+    temperatura:
+        40 pesos (cambiar un grado c°)
+    humedad:
+        25 pesos
+    ruido:
+        12 pesos
+    iluminacion:
+        3 pesos
+
+
+Va = [vs1, vs2, vs3, vs4] (valor actual)
+
+Va = [34, 68, 110, 550] (si ya esta adentro el valor no hay que moverle)
+
+Vo (valor recomendado)
+
+Llega el Va del sensor, entra por el heuristico y retorna el Vo:
+    Vo = [27,  68,  110, 550] (se predio el aire por el sensor 1)
+
+
+Si es artificial (Vo), y se apago el aire, volera la temperatura actual (Va)
+
+
+Calcular la satisfaccion (que tan comodo estaria yo sie se valor estuviera aplicado en un lugar)
+    temperatura:
+        cuando  Vo = Vms (Valor de mayor satisfaccion)
+        si Vo = 20
+            sensor1 = (28 - 20) / (28 - 20) = 8 / 8 = 1 = 100%
+        si Vo = 28
+            sensor1 = 28 - 28 / 28 - 20 = 0 / 8 = 0 = 0%    
+
+
+(si es de minimizacion, si esta por debajo lo ignoras, si esta por arriba, lo bajas y al reves)
+
+Tarea:
+    con Vo = pequeños
+        mayores
+
+
+(maximizacion):
+    Vo = 400
+        sensor4 = 1 - (900 - 400 / 900 - 400) = 1 - 1 = 0
+
+    Vo = 900
+        sensor4 = 1 - (900 - 900 / 900 - 400) = 1 - 0 = 1
+
+    Vo = 550
+        sensor4 = 1 - ((900 - 550) / (900 - 400)) = 1 - 0.58 = 32%
+
+              32%                         
+    <-----------------------------------> 
+   400        550                      900 
+
+Tarea:
+    Generar 15 valores de Vo y calcular la satisfaccion para cada Vo dentro de ese vector, en excel
+
+Martes 25 de febrero --------------------------------------------------------------------------------------------
+8 AM:
+
+    w = {0.4, 0.2, 0.1, 0.3}
+
+    Va = {18, 90, 67, 800}
+
+    Vo = {
+        [21, 41, 76, 666],  <---v1
+        [23, 42, 78, 797],  <---v2
+        [20, 60, 50, 777],  <---v3
+    }
+
+    Satisfaccion con v1:
+        s1 = 28 - 21 / 28 - 20 = 0.875
+
+        ...
+
+Miercoles 26 de febrero -----------------------------------------------------------------------------------------
+
+minimizacion:
+        18                         
+    <-----------------------------------> 
+        Va    22              28
+              Vo
+
+    18 >= 22
+
+                        26                         
+    <-----------------------------------> 
+            22          va    28
+            Vo
+
+    Va >= Vo
+    26 >= 22
+
+        C = {40, 25, 12, 3}
+
+        Eo = { Cx + Cx(Va - Vo) }
+                    26 - 22
+                40 + 40(4) = $200
+
+        # por prender ya te esta cobrando
+    else 
+        0
+
+    Va >= Vmax
+        Emin = { 
+            Cx + Cx (Va -Vmax)
+            40 + 40 (26 - 20 ) = 280
+        }
+
+
+        Cual es el costo de llevar la temperatura actual (Va) a la temperatura que genera la minima satisfaccion para el usuario
+        (menor costo posible, lo menos que yo puedo aceptar)
+    else 
+        0
+
+    Va >= Vmin
+        Emax = {
+            Cx + Cx(Va - Vmin)
+             40 + 40 (26 - 20 ) = 280
+        }
+
+        Cual es el costo de llevar la temperatura actual (Va) a la temperatura ideal para el usuario
+        (mayor costo posible)
+
+        26 >= 20
+            dif de 6 guardados
+    else 
+        0
+
+    Si tengo min y tengo max, se tiene que hacer una normalizacion con complemento
+
+    1 - Emax - Eo / Emax - Emin formula para el calculo del consumo de energia
+    1 - 280 -200 / 280 - 0 = 0.7143
+
+                          0.7143
+    <--------------------------------->
+    Emin                    Eo     Emax
+
+    video de explicacion de todas las formulas que hemos visto de esta unidad en equipo, 
+    mateiral preparado tiene que ser creado durante el video
+
+
+jueves 27 de febrero: --------------------------------------------------------------------------------------------------------
+maximizacion:
+
+    Eo = Cx + Cx (Vo - Va)
+    Emin = Cx + Cx( Vmin - Va)
+    Emax = Cx + Cx (Vmax - Va)
+
+
+
+    Vmin = 400
+    Vmax = 900
+    Va = 700
+    Vo = 850
+
+    Eo:
+        Va =< Vo true
+            700 - 850 = 150
+            Eo = 3 + 3 (150) = 453
+        else
+            0
+
+    Emin:
+        Va =< Vmin false
+        
+        else 
+            0
+    
+    Emax:
+        Va =< Vmax true
+            Emax = 3 + 3 (200) = 603
+        else 
+            0
+
+    S. Energia = 1 - ( 603 - 453 / 603 - 0) = 0.75
+
+
+    pesos_servicios = [0.4, 0.2, 0.1, 0.3]
+
+
+    Ganancia = {
+        Se1 (0.4)  +
+        Se2 (0.2)  +
+        Se3 (0.1)  +
+        Se4 (0.3) 
+     ----------------
+        
+    }
+
+    Fucnion objetivo ponderada:
+
+        Fo =  Gs (alfa) + (beta) Ge
+
+        alfa = Satis
+
+        Beta = E ..
+
+
+        alfa + beta = 1
+
+        le preguntas al usario, te interea satisfaccion o ahorrar energia 
+    
+    Proyecto de unidad 2
+        w = (vReal - vSuavizado) / (vReal + vSuavizado)
+
+        w = w + x (ValorReal - VaorSuavizado)
+
+        x = coeficiente de coreccion
+
+        antes de aplicar el valor a imprimirlo y de mas, hacemos el calculo con w, y antes de repetir w, vamos a actualiar w con 
+        esta formula y luego con le otro y comporativa entre los dos
+
+        se entrega el proximo viernes
