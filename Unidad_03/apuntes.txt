@@ -227,7 +227,7 @@ maximizacion:
 
         w = w + x (ValorReal - VaorSuavizado)
 
-        x = coeficiente de coreccion
+        x = coeficiente de coreccion (0-1)
 
         antes de aplicar el valor a imprimirlo y de mas, hacemos el calculo con w, y antes de repetir w, vamos a actualiar w con 
         esta formula y luego con le otro y comporativa entre los dos
